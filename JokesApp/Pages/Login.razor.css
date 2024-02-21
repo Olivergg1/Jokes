@@ -1,0 +1,21 @@
+﻿#login-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#login-welcome-message {
+    margin-bottom: 2rem;
+}
+
+#login-success-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: max-content;
+    text-align: center;
+}
+
+#login-header {
+    margin-bottom: 2rem;
+}

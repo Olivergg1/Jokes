@@ -1,0 +1,26 @@
+﻿@page "/{Id:int?}"
+@inherits FluxorComponent
+
+<div id="joke-container">
+    @if (Joke != null) {
+        <div id="joke-content">
+            <p>@Joke.Content</p>
+        </div>
+        <div id="joke-container-bottom">
+        <button id="button-joke-update" @onclick=UpdateJoke>🎲 new random joke</button>
+            <p>This joke was created by <a href="/users/@Author.Id">@Author.Name</a></p>
+        </div>
+        <a id="submit-link" class="std-button-outlined" href="submit">✏️ submit your own joke</a>
+    }
+    else if (isFetchErrored)
+    {
+        <div id="joke-container-error">
+            <p id="error-message">@errorReason</p>
+            <button class="std-button-outlined" @onclick=UpdateJoke>retry</button>
+        </div>
+    } 
+    else
+    {
+        <p>Loading joke...</p>
+    }
+</div>

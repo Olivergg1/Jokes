@@ -1,0 +1,17 @@
+﻿@inherits FluxorComponent
+
+<nav>
+    <div class="nav-left">
+        <a id="nav-home" href="">🏡</a>
+    </div>
+    <div class="nav-right">
+        @if (isAuthenticated)
+        {
+            <button id="user-button" class="std-button-outlined" @onclick=RedirectToLogin></button>
+        }
+        else
+        {
+            <button id="login-button" class="std-button-outlined" @onclick=RedirectToLogin>login</button>
+        }
+    </div>
+</nav>

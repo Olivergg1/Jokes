@@ -1,0 +1,10 @@
+﻿@inherits FluxorComponent
+@page "/submit"
+
+<div id="submit-container">
+    <h3>Submit a joke</h3>
+    <EditForm class="std-form" Model="JokeModel" OnSubmit="HandleSubmit" FormName="Joke1">
+        <TextAreaInput class="std-input" @bind-Value="JokeModel!.Content" />
+        <button id="submit-submit-button" class="std-button-outlined" type="submit" disabled=@(!MaySubmit())>submit</button>
+    </EditForm>
+</div>

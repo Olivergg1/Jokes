@@ -1,0 +1,23 @@
+﻿@page "/login"
+
+@inherits FluxorComponent
+
+@if (User != null)
+{
+    <div id="login-success">
+        <h3 id="login-welcome-message">👋 Welcome, @User.Name</h3>
+        <div id="login-success-bottom">
+            <button class="std-button-outlined" @onclick=HandleRedirect>🎲 load a random joke</button>
+            <p>or</p>
+            <button class="std-button-outlined" @onclick=HandleLogout>🚪 logout</button>
+        </div>
+    </div>
+}
+else
+{
+    <h3 id="login-header">Login</h3>
+    <EditForm class="std-form" Model="CredentialsModel" OnSubmit="HandleSubmit" FormName="LoginForm">
+        <TextInput class="std-input" @bind-Value="CredentialsModel!.Username" placeholder="Username..." />
+        <button type="submit" class="std-button-outlined">login</button>
+    </EditForm>
+}

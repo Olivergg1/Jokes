@@ -1,0 +1,24 @@
+﻿nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+    background-color: transparent;
+    border-bottom: 1px solid #FFFFFF10;
+    padding: 0rem 2rem;
+}
+
+#nav-home {
+    padding: 0;
+    margin: 0;
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+#user-button {
+    height: 2.5rem;
+    aspect-ratio: 1;
+    background-image: url(https://cataas.com/cat?width=480&height=480);
+    background-position: center;
+    background-size: cover;
+}
