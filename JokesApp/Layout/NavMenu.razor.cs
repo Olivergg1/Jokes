@@ -17,17 +17,13 @@ public partial class NavMenu
 
     public bool isAuthenticated => _user != null;
 
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
     public void RedirectToLogin()
     {
         NavigationManager?.NavigateTo("/login");
+    }
+
+    public string UserButtonImageStyle()
+    {
+        return $"background-image: url('{_user?.Image}');";
     }
 }

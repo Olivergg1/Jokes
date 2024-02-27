@@ -7,7 +7,7 @@
     <div class="nav-right">
         @if (isAuthenticated)
         {
-            <button id="user-button" class="std-button-outlined" @onclick=RedirectToLogin></button>
+            <button id="user-button" class="std-button-outlined" style=@UserButtonImageStyle() @onclick=RedirectToLogin></button>
         }
         else
         {

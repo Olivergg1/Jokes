@@ -18,7 +18,6 @@
 #user-button {
     height: 2.5rem;
     aspect-ratio: 1;
-    background-image: url(https://cataas.com/cat?width=480&height=480);
     background-position: center;
     background-size: cover;
 }
