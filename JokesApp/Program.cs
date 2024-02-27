@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Fluxor;
 using Blazored.LocalStorage;
+using JokesApp.Services;
 
 const string API_BASE_URL = "https://localhost:7169/";
 
@@ -15,5 +16,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(API_BASE
 builder.Services.AddFluxor(o => o.ScanAssemblies(typeof(Program).Assembly));
 
 builder.Services.AddBlazoredLocalStorage();
+
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 await builder.Build().RunAsync();

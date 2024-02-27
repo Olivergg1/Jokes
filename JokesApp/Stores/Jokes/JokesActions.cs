@@ -1,4 +1,5 @@
 ﻿using JokesApp.Models;
+using JokesApp.Stores.Generic;
 
 namespace JokesApp.Stores.Jokes;
 
@@ -12,8 +13,3 @@ public record FetchJokeTimeoutAction() : ErrorAction();
 public record AddJokeAction(Joke joke);
 public record JokeAddedAction(Joke joke);
 public record JokeAddFailedAction();
-
-public abstract record ErrorAction
-{
-    public string? Reason { get; init; }
-};

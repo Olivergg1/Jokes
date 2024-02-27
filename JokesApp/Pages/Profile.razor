@@ -1,12 +1,27 @@
-﻿@page "/users/{Id:int?}"
+﻿@inherits FluxorComponent
 
-@if (Id != null)
+@page "/users/{Id:int?}"
+
+@if (Id.HasValue)
 {
-    <p>@Id</p>
+    @if (ProfileState!.Value.hasErrored)
+    {
+        <h3>We encountered an error, please try again.</h3>
+    }
+    else if (ProfileState!.Value.isLoading)
+    {
+        <h3>Loading profile...</h3>
+    }
+    else
+    {
+        <div id="user-container">
+            <img src=@User?.Image alt="User profile picture" />
+            <h1>@User?.Username</h1>
+            <h3>@User?.Name</h3>
+        </div>
+    }
 }
 else
 {
-    <p>No UserID</p>
+    <p>No Id was provided, unable to get user profile</p>
 }
-
-<p>This page is yet to be developed</p>
