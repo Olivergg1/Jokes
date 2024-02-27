@@ -24,10 +24,8 @@ public partial class Jokes
 
     private bool isFetchErrored = false;
     private string? errorReason;
-	
-	public Joke? Joke => _jokesState?.Value.Joke;
-	
-    public User? Author => _jokesState?.Value.JokeAuthor;
+
+    public Joke? Joke => _jokesState?.Value.Joke;
 
     protected override void OnInitialized()
 	{
@@ -42,11 +40,11 @@ public partial class Jokes
 
     public void UpdateJoke()
     {
-        if (Id != null && isInitial)
+        if (Id.HasValue && isInitial)
         {
             isInitial = false;
 
-            _dispatcher?.Dispatch(new FetchJokeByIdAction(Id ?? 0));
+            _dispatcher?.Dispatch(new FetchJokeByIdAction(Id.Value));
             return;
         }
 
@@ -57,7 +55,7 @@ public partial class Jokes
 
     public void OnJokeFetchedAction(JokeFetchedAction action)
     {
-        _navigationManager?.NavigateTo(action.joke.Id.ToString());
+        _navigationManager?.NavigateTo(action.Joke.Id.ToString());
     }
 
     public void OnFetchJokeFailedAction(FetchJokeFailedAction action)
@@ -68,7 +66,6 @@ public partial class Jokes
 
     public void OnFetchJokeTimeoutAction(FetchJokeTimeoutAction action)
     {
-        Console.WriteLine("fittunge");
         errorReason = action.Reason;
         isFetchErrored = true;
     }

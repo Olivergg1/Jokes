@@ -7,13 +7,4 @@ namespace JokesApp.Stores.Jokes;
 public record JokesState
 {	 
 	public Joke? Joke { get; set; }
-
-	public User? JokeAuthor { get; set; }
-
-	private JokesState() { }
-
-	public JokesState(Joke joke)
-	{
-		Joke = joke;
-	}
 }

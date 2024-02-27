@@ -7,8 +7,8 @@ namespace JokesAPI.Services;
 
 public interface IUsersService
 {
-    Task<User?> GetUserByIdAsync(int id);
-    Task<User?> CreateUserAsync(User user);
+    Task<UserDetailDto?> GetUserByIdAsync(int id);
+    Task<UserDto?> CreateUserAsync(User user);
     Task<User?> AuthenticateUserAsync(Credentials credentials);
 }
 
@@ -21,17 +21,36 @@ public class UsersService : IUsersService
         _databaseContext = databaseContext;
     }
 
-    public async Task<User?> GetUserByIdAsync(int id)
+    public async Task<UserDetailDto?> GetUserByIdAsync(int id)
     {
-        return await _databaseContext.Users.FindAsync(id);
+        return await _databaseContext.Users
+            .Include(user => user.Jokes)
+            .Select(user => new UserDetailDto 
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Name = user.Name,
+                Image = user.Image,
+                Jokes = user.Jokes.ToList()
+            })
+            .SingleOrDefaultAsync(user => user.Id == id);
     }
 
-    public async Task<User?> CreateUserAsync(User user)
+    public async Task<UserDto?> CreateUserAsync(User user)
     {
         var result = await _databaseContext.Users.AddAsync(user);
         await _databaseContext.SaveChangesAsync();
 
-        return result.Entity;
+        var entity = result.Entity;
+        var createdUser = new UserDto
+        {
+            Id = entity.Id,
+            Username = entity.Username,
+            Name = entity.Name,
+            Image = entity.Image
+        };
+
+        return createdUser;
     }
 
     public async Task<User?> AuthenticateUserAsync(Credentials credentials)

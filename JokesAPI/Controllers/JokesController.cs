@@ -18,7 +18,7 @@ public class JokesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Joke>>> GetJokes()
+    public async Task<ActionResult<List<JokeDto>>> GetJokes()
     {
         var jokes = await _jokesService.GetJokesAsync();
 
@@ -31,7 +31,7 @@ public class JokesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Joke>> GetJoke(int id)
+    public async Task<ActionResult<JokeDetailDto>> GetJokeById(int id)
     {
         var joke = await _jokesService.GetJokeByIdAsync(id);
 
@@ -44,7 +44,7 @@ public class JokesController : ControllerBase
     }
 
     [HttpGet("random")]
-    public async Task<ActionResult<List<Joke>>> GetRandomJoke()
+    public async Task<ActionResult<JokeDetailDto?>> GetRandomJoke()
     {
         var joke = await _jokesService.GetRandomJokeAsync();
 
@@ -57,10 +57,16 @@ public class JokesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Joke>> AddNewJoke(Joke joke)
+    public async Task<ActionResult<JokeDto>> AddNewJoke(Joke joke)
     {
         await _jokesService.AddJokeAsync(joke);
 
-        return CreatedAtAction(nameof(GetJoke), new { id = joke.Id }, joke);
+        var createdJoke = new JokeDto { 
+            Id = joke.Id, 
+            Content = joke.Content, 
+            AuhtorId = joke.AuthorId 
+        };
+
+        return CreatedAtAction(nameof(AddNewJoke), new { id = createdJoke.Id }, createdJoke);
     }
 }

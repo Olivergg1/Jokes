@@ -28,13 +28,7 @@ public class JokesEffects
 
             var joke = await jokeResponse.Content.ReadFromJsonAsync<Joke>();
 
-            // Fetch author of joke
-            var userResponse = await _httpClient.GetAsync(_httpClient.BaseAddress + "api/Users/" + joke.AuthorId);
-            userResponse.EnsureSuccessStatusCode();
-
-            var user = await userResponse.Content.ReadFromJsonAsync<User>();
-
-            dispatcher.Dispatch(new JokeFetchedAction(joke, user));
+            dispatcher.Dispatch(new JokeFetchedAction(joke));
         }
         catch (HttpRequestException exception)
         {
@@ -64,13 +58,7 @@ public class JokesEffects
 
             var joke = await jokeResponse.Content.ReadFromJsonAsync<Joke>();
 
-            // Fetch author of joke
-            var userResponse = await _httpClient.GetAsync(_httpClient.BaseAddress + "api/Users/" + joke.AuthorId);
-            userResponse.EnsureSuccessStatusCode();
-            
-            var user = await userResponse.Content.ReadFromJsonAsync<User>();
-
-            dispatcher.Dispatch(new JokeFetchedAction(joke, user));
+            dispatcher.Dispatch(new JokeFetchedAction(joke));
         }
         catch (HttpRequestException exception)
         {

@@ -6,9 +6,9 @@ namespace JokesAPI.Services;
 
 public interface IJokesService
 {
-    Task<Joke?> GetJokeByIdAsync(int id);
-    Task<List<Joke>?> GetJokesAsync();
-    Task<Joke?> GetRandomJokeAsync();
+    Task<JokeDetailDto?> GetJokeByIdAsync(int id);
+    Task<List<JokeDto>?> GetJokesAsync();
+    Task<JokeDetailDto?> GetRandomJokeAsync();
 
     Task<Joke?> AddJokeAsync(Joke joke);
 }
@@ -22,22 +22,49 @@ public class JokesService : IJokesService
         _databaseContext = databaseContext;
     }
 
-    public async Task<Joke?> GetJokeByIdAsync(int id)
+    public async Task<JokeDetailDto?> GetJokeByIdAsync(int id)
     {
-        return await _databaseContext.Jokes.FindAsync(id);
+        return await _databaseContext.Jokes
+            .Include(joke => joke.Author)
+            .Select(joke => new JokeDetailDto
+            {
+                Id = joke.Id,
+                Content = joke.Content,
+                AuthorId = joke.AuthorId,
+                AuthorName = joke.Author.Name
+            })
+            .SingleOrDefaultAsync(joke => joke.Id == id);
     }
 
-    public async Task<List<Joke>?> GetJokesAsync()
+    public async Task<List<JokeDto>?> GetJokesAsync()
     {
-        return await _databaseContext.Jokes.ToListAsync();
+        return await _databaseContext.Jokes
+            .Include(joke => joke.Author)
+            .Select(joke => new JokeDto
+            {
+                Id = joke.Id,
+                Content = joke.Content,
+                AuhtorId = joke.AuthorId
+            })
+            .ToListAsync();
     }
 
-    public async Task<Joke?> GetRandomJokeAsync()
+    public async Task<JokeDetailDto?> GetRandomJokeAsync()
     {
         var count = await _databaseContext.Jokes.CountAsync();
         var offset = new Random(Guid.NewGuid().GetHashCode()).Next(0, count);
 
-        return await _databaseContext.Jokes.Skip(offset).FirstOrDefaultAsync();
+        return await _databaseContext.Jokes
+            .Include(joke => joke.Author)
+            .Skip(offset)
+            .Select(joke => new JokeDetailDto
+            {
+                Id = joke.Id,
+                Content = joke.Content,
+                AuthorId = joke.AuthorId,
+                AuthorName = joke.Author.Name
+            })
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Joke?> AddJokeAsync(Joke joke)

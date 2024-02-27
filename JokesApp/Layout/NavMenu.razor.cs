@@ -22,6 +22,11 @@ public partial class NavMenu
         NavigationManager?.NavigateTo("/login");
     }
 
+    public void RedirectToProfile()
+    {
+        NavigationManager?.NavigateTo($"/users/{_user.Id}");
+    }
+
     public string UserButtonImageStyle()
     {
         return $"background-image: url('{_user?.Image}');";

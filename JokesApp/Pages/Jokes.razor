@@ -8,7 +8,7 @@
         </div>
         <div id="joke-container-bottom">
         <button id="button-joke-update" @onclick=UpdateJoke>🎲 new random joke</button>
-            <p>This joke was created by <a href="/users/@Author.Id">@Author.Name</a></p>
+            <p>This joke was created by <a href="/users/@Joke.AuthorId">@Joke.AuthorName</a></p>
         </div>
         <a id="submit-link" class="std-button-outlined" href="submit">✏️ submit your own joke</a>
     }

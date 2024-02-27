@@ -9,8 +9,7 @@ public static class JokesReducers
 	{
 		return state with
 		{
-			Joke = action.joke,
-			JokeAuthor = action.user
+			Joke = action.Joke
 		};
 	}
 }

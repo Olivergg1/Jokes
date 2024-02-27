@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUserById(int id)
+    public async Task<ActionResult<UserDetailDto?>> GetUserById(int id)
     {
         var user = await _usersService.GetUserByIdAsync(id);
 
@@ -32,7 +32,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<User>> CreateUser(User user)
+    public async Task<ActionResult<UserDto?>> CreateUser(User user)
     {
         await _usersService.CreateUserAsync(user);
 
@@ -40,7 +40,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("auth")]
-    public async Task<ActionResult<User>> AuthenticateUser(Credentials credentials)
+    public async Task<ActionResult<UserDto?>> AuthenticateUser(Credentials credentials)
     {
         var user = await _usersService.AuthenticateUserAsync(credentials);
 

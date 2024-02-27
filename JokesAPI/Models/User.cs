@@ -17,6 +17,8 @@ public class User
     [Required]
     public string Image { get; set; }
 
+    public ICollection<Joke>? Jokes { get; } = new List<Joke>();
+
     public User()
     {
         Image = "https://ih1.redbubble.net/image.5137167725.5314/raf,360x360,075,t,fafafa:ca443f4786.jpg";
