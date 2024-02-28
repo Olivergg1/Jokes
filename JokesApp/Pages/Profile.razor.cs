@@ -17,6 +17,16 @@ public partial class Profile
     public IState<ProfileState>? ProfileState { get; set; }
 
     public User? User => ProfileState?.Value?.User;
+    public int JokesCount => User?.Jokes?.Count ?? 0;
+
+    public const int MaxNumberOfJokes = 6;
+
+    private int _offset = 0;
+    public int MaxPaginations => JokesCount / MaxNumberOfJokes;
+    public int GetJokesOffset() => _offset * MaxNumberOfJokes;
+
+    public int GetPaginationUpperLimit => int.Min(GetJokesOffset() + MaxNumberOfJokes, JokesCount);
+    public string GetPaginationText => $"Showing {GetJokesOffset() + 1} - {GetPaginationUpperLimit} of total {JokesCount}";
 
     protected override void OnInitialized()
     {
@@ -26,5 +36,15 @@ public partial class Profile
         {
             Dispatcher?.Dispatch(new FetchProfileByIdAction(Id.Value));
         }
+    }
+
+    private void increasePagination()
+    {
+        _offset = Math.Clamp(_offset + 1, 0, MaxPaginations);
+    }
+
+    private void decreasePagination()
+    {
+        _offset = Math.Clamp(_offset - 1, 0, MaxPaginations);
     }
 }

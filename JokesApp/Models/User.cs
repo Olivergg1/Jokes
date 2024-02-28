@@ -10,5 +10,10 @@ public class User
 
     public string Image {  get; set; }
 
-    public List<Joke>? Jokes { get; set; }
+    public List<Joke> Jokes { get; set; }
+
+    public User() 
+    {
+        Jokes ??= new List<Joke>();
+    }
 }

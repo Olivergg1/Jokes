@@ -2,17 +2,19 @@
     position: relative;
     display: flex;
     flex-direction: column;
-
+    align-items: center;
     height: 100%;
     width: 100%;
+    overflow-y: auto;
 }
 
 main {
-    flex: 1;
     font-weight: lighter;
     color: lightgray;
     height: 100%;
     width: 100%;
+    max-width: 35rem;
+    overflow: auto;
 }
 
 article.content {

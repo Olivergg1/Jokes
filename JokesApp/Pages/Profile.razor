@@ -15,17 +15,36 @@
     else
     {
         <div id="user-container">
-            <img src=@User?.Image alt="User profile picture" />
-            <h1>@User?.Username</h1>
-            <h3>@User?.Name</h3>
-            <p># of jokes: @(User?.Jokes?.Count ?? 0)</p>
-            <div id="jokes-list">
-                @foreach (var joke in User?.Jokes) {
-                    <a id="jokes-list-item" href=@joke.Id>
-                        <p>@joke.Content</p>
-                    </a>
+            <section id="user-info">
+                <img id="user-image" src=@User?.Image alt="User profile picture" />
+                <div id="user-details">
+                    <h1>@User?.Username</h1>
+                    <p>@User?.Name</p>
+                </div>
+            </section>
+            <section id="user-jokes">
+                @if (JokesCount > 0)
+                {
+                    <p>@User?.Name has @JokesCount jokes</p>
+                    <div id="jokes-list">
+                        @foreach (var joke in User?.Jokes.Skip(GetJokesOffset()).Take(MaxNumberOfJokes))
+                        {
+                            <div class="jokes-list-item">
+                                <a class="joke-content" href=@joke.Id>@joke.Content</a>
+                            </div>
+                        }
+                    </div>
+                    <div id="jokes-pagination">
+                        <button disabled=@(_offset== 0) class="std-button-fill std-no-outline" @onclick=decreasePagination>prev</button>
+                        <p id="jokes-pagination-text">@GetPaginationText</p>
+                        <button disabled=@(_offset == MaxPaginations) class="std-button-fill std-no-outline" @onclick=increasePagination>next</button>
+                    </div>
                 }
-            </div>
+                else
+                {
+                    <p>It appears @User?.Name has no jokes 😑</p>
+                }
+            </section>
         </div>
     }
 }
