@@ -1,23 +1,25 @@
-﻿@page "/{Id:int?}"
-@inherits FluxorComponent
+﻿@inherits FluxorComponent
+
+@page "/{Id:int?}"
 
 <div id="joke-container">
-    @if (Joke != null) {
+    @if (_jokesState!.Value.HasErrored)
+    {
+        <ErrorMessage Message="@_errorMessage" OnRetry="UpdateJoke" />
+    }
+    else if (_jokesState!.Value.IsLoading)
+    {
+        <p>Loading joke...</p>
+    } 
+    else
+    {
         <div id="joke-content">
             <p>@Joke.Content</p>
         </div>
         <div id="joke-container-bottom">
-        <button id="button-joke-update" @onclick=UpdateJoke>🎲 new random joke</button>
+            <button id="button-joke-update" @onclick=UpdateJoke>🎲 new random joke</button>
             <p>This joke was created by <a href="/users/@Joke.AuthorId">@Joke.AuthorName</a></p>
         </div>
         <a id="submit-link" class="std-button-outlined" href="submit">✏️ submit your own joke</a>
-    }
-    else if (isFetchErrored)
-    {
-        <ErrorMessage Message="@errorReason" OnRetry="UpdateJoke" />
-    } 
-    else
-    {
-        <p>Loading joke...</p>
     }
 </div>

@@ -22,20 +22,16 @@ public partial class Jokes
 
     private bool isInitial = true;
 
-    private bool isFetchErrored = false;
-    private string? errorReason;
+    private string? _errorMessage => _jokesState?.Value.ErrorMessage;
 
     public Joke? Joke => _jokesState?.Value.Joke;
 
     protected override void OnInitialized()
 	{
-        Console.WriteLine(Id ?? -1);
 		base.OnInitialized();
         UpdateJoke();
 
-        SubscribeToAction<JokeFetchedAction>(OnJokeFetchedAction);
-        SubscribeToAction<FetchJokeFailedAction>(OnFetchJokeFailedAction);
-        SubscribeToAction<FetchJokeTimeoutAction>(OnFetchJokeTimeoutAction);
+        SubscribeToAction<FetchJokeSucceededAction>(OnFetchJokeSucceededAction);
     }
 
     public void UpdateJoke()
@@ -53,20 +49,8 @@ public partial class Jokes
         _dispatcher?.Dispatch(new FetchRandomJokeAction());
     }
 
-    public void OnJokeFetchedAction(JokeFetchedAction action)
+    public void OnFetchJokeSucceededAction(FetchJokeSucceededAction action)
     {
         _navigationManager?.NavigateTo(action.Joke.Id.ToString());
-    }
-
-    public void OnFetchJokeFailedAction(FetchJokeFailedAction action)
-    {
-        errorReason = action.Reason;
-        isFetchErrored = true;
-    }
-
-    public void OnFetchJokeTimeoutAction(FetchJokeTimeoutAction action)
-    {
-        errorReason = action.Reason;
-        isFetchErrored = true;
     }
 }

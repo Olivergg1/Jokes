@@ -28,7 +28,7 @@ public class JokesEffects
 
             var joke = await jokeResponse.Content.ReadFromJsonAsync<Joke>();
 
-            dispatcher.Dispatch(new JokeFetchedAction(joke));
+            dispatcher.Dispatch(new FetchJokeSucceededAction(joke));
         }
         catch (HttpRequestException exception)
         {
@@ -39,7 +39,7 @@ public class JokesEffects
                     break;
                 default:
                     // Server timeout (not reachable)
-                    dispatcher.Dispatch(new FetchJokeTimeoutAction { Reason = ServerErrorMessages.ServerTimedOut });
+                    dispatcher.Dispatch(new FetchJokeFailedAction { Reason = ServerErrorMessages.ServerTimedOut });
                     break;
             }
         }
@@ -53,12 +53,12 @@ public class JokesEffects
         try
         {
             // Fetch joke
-            var jokeResponse = await _httpClient.GetAsync(_httpClient.BaseAddress + "api/Jokes/" + action.id, cts.Token);
+            var jokeResponse = await _httpClient.GetAsync(_httpClient.BaseAddress + "api/Jokes/" + action.Id, cts.Token);
             jokeResponse.EnsureSuccessStatusCode();
 
             var joke = await jokeResponse.Content.ReadFromJsonAsync<Joke>();
 
-            dispatcher.Dispatch(new JokeFetchedAction(joke));
+            dispatcher.Dispatch(new FetchJokeSucceededAction(joke));
         }
         catch (HttpRequestException exception)
         {
@@ -69,7 +69,7 @@ public class JokesEffects
                     break;
                 default:
                     // Server timeout (not reachable)
-                    dispatcher.Dispatch(new FetchJokeTimeoutAction { Reason = ServerErrorMessages.ServerTimedOut });
+                    dispatcher.Dispatch(new FetchJokeFailedAction { Reason = ServerErrorMessages.ServerTimedOut });
                     break;
             }
         }
@@ -78,7 +78,7 @@ public class JokesEffects
     [EffectMethod]
     public async Task AddJoke(AddJokeAction action, IDispatcher dispatcher)
     {
-        var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "api/Jokes/", action.joke);
+        var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "api/Jokes/", action.Joke);
 
         if (response.IsSuccessStatusCode)
         {

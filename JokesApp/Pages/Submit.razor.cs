@@ -45,7 +45,7 @@ public partial class Submit
 
     public void OnJokeAddedAction(JokeAddedAction action)
     {
-        var path = String.Format("/{0}", action.joke.Id);
+        var path = String.Format("/{0}", action.Joke.Id);
 
         NavigationManager?.NavigateTo(path);
     }

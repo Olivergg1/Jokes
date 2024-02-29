@@ -3,13 +3,13 @@ using JokesApp.Stores.Generic;
 
 namespace JokesApp.Stores.Jokes;
 
-public record FetchRandomJokeAction();
-public record FetchJokeByIdAction(int id);
+public record FetchJokeAction();
+public record FetchRandomJokeAction() : FetchJokeAction();
+public record FetchJokeByIdAction(int Id) : FetchJokeAction();
 
-public record JokeFetchedAction(Joke Joke);
+public record FetchJokeSucceededAction(Joke Joke);
 public record FetchJokeFailedAction() : ErrorAction();
-public record FetchJokeTimeoutAction() : ErrorAction();
 
-public record AddJokeAction(Joke joke);
-public record JokeAddedAction(Joke joke);
+public record AddJokeAction(Joke Joke);
+public record JokeAddedAction(Joke Joke);
 public record JokeAddFailedAction();

@@ -4,6 +4,16 @@ namespace JokesApp.Stores.Profile;
 
 public class ProfileReducers
 {
+    [ReducerMethod(typeof(FetchProfileByIdAction))]
+    public static ProfileState ReduceFetchProfileById(ProfileState state)
+    {
+        return state with
+        {
+            IsLoading = true,
+            HasErrored = false,
+        };
+    }
+
     [ReducerMethod]
     public static ProfileState ReduceFetchProfileSucceeded(ProfileState state, FetchProfileSucceededAction action)
     {
@@ -12,16 +22,6 @@ public class ProfileReducers
             IsLoading = false,
             HasErrored = false,
             User = action.User,
-        };
-    }
-
-    [ReducerMethod(typeof(FetchProfileByIdAction))]
-    public static ProfileState ReduceFetchProfileById(ProfileState state)
-    {
-        return state with
-        {
-            IsLoading = true,
-            HasErrored = false,
         };
     }
 
