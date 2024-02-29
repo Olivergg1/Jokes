@@ -7,9 +7,12 @@ public static class JokesReducers
 	[ReducerMethod(typeof(FetchJokeAction))]
 	public static JokesState ReduceFetchJokeById(JokesState state)
 	{
+		// Set IsLoading to true only if no joke has been fetched before
+		var shouldSetLoading = state.Joke == null;
+		
 		return state with
 		{
-			IsLoading = true,
+			IsLoading = shouldSetLoading,
             HasErrored = false,
         };
 	}
