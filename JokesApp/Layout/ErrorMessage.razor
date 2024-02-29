@@ -1,0 +1,7 @@
+﻿<section id="error-container">
+    <p id="error-message">@Message</p>
+    @if (OnRetry != null)
+    {
+        <button class="std-button-outlined" @onclick=handleRetry>retry</button>
+    }
+</section>

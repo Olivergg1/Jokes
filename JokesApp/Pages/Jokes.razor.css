@@ -35,18 +35,6 @@
     width: max-content;
 }
 
-#joke-container-error {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-#error-message {
-    font-size: 1.2rem;
-    margin: 1rem 0;
-    text-align: center;
-}
-
 #submit-link {
     margin-top: auto;
     color: lightgray;

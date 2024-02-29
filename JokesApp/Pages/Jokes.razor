@@ -14,10 +14,7 @@
     }
     else if (isFetchErrored)
     {
-        <div id="joke-container-error">
-            <p id="error-message">@errorReason</p>
-            <button class="std-button-outlined" @onclick=UpdateJoke>retry</button>
-        </div>
+        <ErrorMessage Message="@errorReason" OnRetry="UpdateJoke" />
     } 
     else
     {

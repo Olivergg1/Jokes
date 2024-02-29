@@ -6,7 +6,7 @@
 {
     @if (ProfileState!.Value.hasErrored)
     {
-        <h3>We encountered an error, please try again.</h3>
+        <ErrorMessage Message="We encountered an error 😔, please try again." />
     }
     else if (ProfileState!.Value.isLoading)
     {
@@ -50,5 +50,5 @@
 }
 else
 {
-    <p>No Id was provided, unable to get user profile</p>
+    <ErrorMessage Message="No Id was provided, unable to get user profile" />
 }
