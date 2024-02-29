@@ -4,11 +4,11 @@
 
 @if (Id.HasValue)
 {
-    @if (ProfileState!.Value.hasErrored)
+    @if (ProfileState!.Value.HasErrored)
     {
-        <ErrorMessage Message="We encountered an error 😔, please try again." />
+        <ErrorMessage Message="@ErrorMessage" />
     }
-    else if (ProfileState!.Value.isLoading)
+    else if (ProfileState!.Value.IsLoading)
     {
         <h3>Loading profile...</h3>
     }
@@ -50,5 +50,5 @@
 }
 else
 {
-    <ErrorMessage Message="No Id was provided, unable to get user profile" />
+    <ErrorMessage Message="@ErrorMessage" />
 }

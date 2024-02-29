@@ -1,21 +1,13 @@
 ﻿using Fluxor;
 using JokesApp.Models;
+using JokesApp.Stores.Generic;
 
 namespace JokesApp.Stores.Profile;
 
 [FeatureState]
-public record ProfileState
+public record ProfileState : ErrorableState
 {
     public User? User { get; set; }
 
-    public bool isLoading = true;
-
-    public bool hasErrored = false;
-
-    private ProfileState() { }
-
-    public ProfileState(User user)
-    {
-        User = user;
-    }
+    public bool IsLoading = true;
 }

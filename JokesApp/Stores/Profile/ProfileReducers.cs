@@ -9,8 +9,8 @@ public class ProfileReducers
     {
         return state with
         {
-            isLoading = false,
-            hasErrored = false,
+            IsLoading = false,
+            HasErrored = false,
             User = action.User,
         };
     }
@@ -20,18 +20,19 @@ public class ProfileReducers
     {
         return state with
         {
-            isLoading = true,
-            hasErrored = false,
+            IsLoading = true,
+            HasErrored = false,
         };
     }
 
-    [ReducerMethod(typeof(FetchProfileFailedAction))]
-    public static ProfileState ReduceFetchProfileFailed(ProfileState state)
+    [ReducerMethod]
+    public static ProfileState ReduceFetchProfileFailed(ProfileState state, FetchProfileFailedAction action)
     {
         return state with
         {
-            isLoading = false,
-            hasErrored = true
+            IsLoading = false,
+            HasErrored = true,
+            ErrorMessage = action.Reason
         };
     }
 }
