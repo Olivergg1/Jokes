@@ -1,0 +1,8 @@
+﻿@inherits FluxorComponent
+
+<div id="modal-container" class=@ModalProviderStyle>
+    @if (IsModalVisible)
+    {
+        @CreateComponent()
+    }
+</div>

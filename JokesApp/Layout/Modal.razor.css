@@ -1,0 +1,21 @@
+﻿#modal {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: #303030;
+    min-width: 20rem;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+#close {
+    border: none;
+    background-color: transparent;
+    font-size: 0.8rem;
+    margin-bottom: auto;
+}
