@@ -4,8 +4,9 @@ using JokesApp.Stores.Profile;
 using JokesApp.Models;
 using JokesApp.Constants;
 using JokesApp.Stores.Users;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.AspNetCore.Components.Routing;
+using JokesApp.Stores.ModalStore;
+using JokesApp.Modals;
 
 namespace JokesApp.Pages;
 
@@ -112,8 +113,8 @@ public partial class Profile : IDisposable
         _offset = Math.Clamp(_offset - 1, 0, MaxPaginations);
     }
 
-    public void HandleLogout()
+    public void OpenLogoutModal()
     {
-        Dispatcher?.Dispatch(new UserLogoutAction());
+        Dispatcher?.Dispatch(new ShowModalAction(typeof(LogoutModal)));
     }
 }

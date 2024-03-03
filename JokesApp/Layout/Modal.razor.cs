@@ -9,7 +9,7 @@ public interface IModal { }
 public partial class Modal
 {
     [Inject]
-    public IDispatcher Dispatcher { get; set; }
+    public IDispatcher? Dispatcher { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -19,6 +19,6 @@ public partial class Modal
 
     public void HandleClose()
     {
-        Dispatcher.Dispatch(new CloseModalAction());
+        Dispatcher?.Dispatch(new CloseModalAction());
     }
 }

@@ -144,8 +144,7 @@ code {
 }
 
 .std-button-fill:is(:hover):not(:disabled) {
-    border-color: lightgray;
-    background-color: #3267e3
+    opacity: 0.8;
 }
 
 .std-button-fill:is(:disabled) {

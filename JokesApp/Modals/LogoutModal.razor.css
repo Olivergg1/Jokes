@@ -1,0 +1,21 @@
+﻿#prompt {
+    text-align: center;
+}
+
+#options {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+#options > button {
+    width: 100%;
+}
+
+#cancel {
+    background-color: #005085
+}
+
+#logout {
+    background-color: darkred;
+}

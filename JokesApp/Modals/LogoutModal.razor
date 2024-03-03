@@ -1,0 +1,10 @@
+﻿@implements IModal
+@inherits FluxorComponent
+
+<Modal>
+    <p id="prompt">Are you sure you want to logout?</p>
+    <div id="options">
+        <button id="cancel" class="std-button-fill" disabled="@optionButtonsDisabled" @onclick=CloseModal>✋ stay</button>
+        <button id="logout" class="std-button-fill" disabled=@optionButtonsDisabled @onclick=HandleLogout>🚪 logout</button>
+    </div>
+</Modal>
