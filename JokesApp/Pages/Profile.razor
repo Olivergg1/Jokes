@@ -20,6 +20,11 @@
                 <div id="user-details">
                     <h1>@User?.Username</h1>
                     <p>@User?.Name</p>
+                    <p>@User?.Upvotes upvotes</p>
+                    @if (IsLoggedIn && !IsSelf)
+                    {
+                        <button id="downvote" class="std-button-fill" @onclick=ToggleUpvote disabled=@upvoteButtonDisabled>@upvoteButtonText</button>
+                    }
                 </div>
             </section>
             <section id="user-jokes">

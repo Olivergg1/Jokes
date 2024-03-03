@@ -35,4 +35,18 @@ public class ProfileReducers
             ErrorMessage = action.Reason
         };
     }
+
+    [ReducerMethod(typeof(ToggleUpvoteSuccededAction))]
+    public static ProfileState ReduceToggleUpvoteSucceeded(ProfileState state)
+    {
+        var user = state.User;
+
+        user!.Upvotes = user.HasUpvoted ? user.Upvotes - 1 : user.Upvotes + 1;
+        user!.HasUpvoted = !user.HasUpvoted;
+
+        return state with
+        {
+            User = user
+        };
+    }
 }

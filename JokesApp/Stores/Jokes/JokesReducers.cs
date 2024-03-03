@@ -14,6 +14,7 @@ public static class JokesReducers
 		{
 			IsLoading = shouldSetLoading,
             HasErrored = false,
+			Joke = shouldSetLoading ? null : state.Joke,
         };
 	}
 

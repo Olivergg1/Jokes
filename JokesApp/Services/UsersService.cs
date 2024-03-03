@@ -10,19 +10,20 @@ namespace JokesApp.Services;
 
 public interface IUsersService
 {
-    Task<User?> GetUserById(int id);
+    Task<User?> GetUserById(int id, int senderId);
+    Task<bool> ToggleUpvoteAsync(Upvote upvote);
 }
 
 public class UsersService : BaseService, IUsersService
 {
     public UsersService(HttpClient httpClient, IDispatcher dispatcher) : base(httpClient, dispatcher) { }
 
-    public async Task<User?> GetUserById(int id)
+    public async Task<User?> GetUserById(int id, int senderId = 0)
     {
         try
         {
             var cts = new CancellationTokenSource();
-            var response = await HttpClient.GetAsync($"{HttpClient.BaseAddress}api/users/{id}", cts.Token);
+            var response = await HttpClient.GetAsync($"{HttpClient.BaseAddress}api/users/{id}?sender={senderId}", cts.Token);
 
             response.EnsureSuccessStatusCode();
 
@@ -41,6 +42,34 @@ public class UsersService : BaseService, IUsersService
                     break;
             }
             return null;
+        }
+    }
+
+    public async Task<bool> ToggleUpvoteAsync(Upvote upvote)
+    {
+        try
+        {
+            var cts = new CancellationTokenSource();
+            var response = await HttpClient.PostAsJsonAsync($"{HttpClient.BaseAddress}api/users/upvote", upvote, cts.Token);
+
+            response.EnsureSuccessStatusCode();
+
+            return true;
+        }
+        catch (HttpRequestException exception)
+        {
+            switch (exception.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    Dispatcher.Dispatch(new ToggleUpvoteFailedAction());
+                    break;
+                default:
+                    // Server timeout (not reachable)
+                    Dispatcher.Dispatch(new ToggleUpvoteFailedAction());
+                    break;
+            }
+
+            return false;
         }
     }
 }

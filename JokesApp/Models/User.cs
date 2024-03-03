@@ -12,6 +12,9 @@ public class User
 
     public List<Joke> Jokes { get; set; }
 
+    public int Upvotes { get; set; } = 0;
+    public bool HasUpvoted { get; set; } = false;
+
     public User() 
     {
         Jokes ??= new List<Joke>();
