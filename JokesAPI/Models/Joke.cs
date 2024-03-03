@@ -15,4 +15,8 @@ public class Joke
     public int AuthorId { get; set; }
 
     public User? Author { get; init; }
+
+    public List<Ticket>? Tickets { get; set; }
+
+    public bool IsAvailable => Tickets?.Count < 5;
 }

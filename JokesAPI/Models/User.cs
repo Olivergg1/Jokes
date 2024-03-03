@@ -20,9 +20,9 @@ public class User
 
     public ICollection<Joke>? Jokes { get; } = new List<Joke>();
 
-    public List<UserUpvote> Upvoters { get; set; }
+    public List<UserUpvote> Upvoters { get; set; } = [];
 
-    public List<UserUpvote> UpvotedUsers { get; set; }
+    public List<UserUpvote> UpvotedUsers { get; set; } = [];
 
     public User()
     {
