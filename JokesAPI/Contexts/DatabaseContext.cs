@@ -14,6 +14,7 @@ public class DatabaseContext : DbContext
 
     public DbSet<Joke> Jokes { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserUpvote> UsersUpvote { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -30,12 +31,12 @@ public class DatabaseContext : DbContext
 
         modelBuilder.Entity<UserUpvote>()
             .HasOne(u => u.Upvoter)
-            .WithMany(u => u.Upvoters)
+            .WithMany(u => u.UpvotedUsers)
             .HasForeignKey(u => u.UpvoterId)
             .OnDelete(DeleteBehavior.Restrict);
         modelBuilder.Entity<UserUpvote>()
             .HasOne(u => u.UpvotedUser)
-            .WithMany(u => u.UpvotedUsers)
+            .WithMany(u => u.Upvoters)
             .HasForeignKey(u => u.UpvotedUserId)
             .OnDelete(DeleteBehavior.Restrict);
     }

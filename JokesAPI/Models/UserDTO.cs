@@ -13,7 +13,9 @@ public class UserDto
 
 public class UserDetailDto : UserDto
 {
-    public List<Joke> Jokes { get; set; } = new();
+    public int Upvotes { get; set; }
+    public bool HasUpvoted { get; set; } = false;
+    public List<Joke> Jokes { get; set; } = [];
 }
 
 public class UserCredentialsDto

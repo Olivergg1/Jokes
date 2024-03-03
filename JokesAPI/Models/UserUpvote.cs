@@ -8,3 +8,9 @@ public class UserUpvote
     public User Upvoter { get; set; }
     public User UpvotedUser { get; set; }
 }
+
+public class UpvoteDto()
+{
+    public int UpvoterId { get; set; }
+    public int UpvotedUserId { get; set; }
+}

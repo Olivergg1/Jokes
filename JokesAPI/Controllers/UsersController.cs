@@ -19,9 +19,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserDetailDto?>> GetUserById(int id)
+    public async Task<ActionResult<UserDetailDto?>> GetUserById(int id, [FromQuery(Name = "sender")] int senderId)
     {
-        var user = await _usersService.GetUserByIdAsync(id);
+        var user = await _usersService.GetUserByIdAsync(id, senderId);
 
         if (user == null)
         {
@@ -37,6 +37,19 @@ public class UsersController : ControllerBase
         await _usersService.CreateUserAsync(user);
 
         return CreatedAtAction(nameof(CreateUser), new { id = user.Id }, user);
+    }
+
+    [HttpPost("upvote")]
+    public async Task<ActionResult> UpvoteUser([FromBody] UpvoteDto upvoteDto)
+    {
+        var success = await _usersService.ToggleUpvoteAsync(upvoteDto);
+
+        if (!success)
+        {
+            return BadRequest();
+        }
+        
+        return Ok();
     }
 
     [HttpPost("auth")]
