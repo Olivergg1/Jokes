@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JokesAPI.Models;
 
@@ -18,6 +19,10 @@ public class User
     public string Image { get; set; }
 
     public ICollection<Joke>? Jokes { get; } = new List<Joke>();
+
+    public List<UserUpvote> Upvoters { get; set; }
+
+    public List<UserUpvote> UpvotedUsers { get; set; }
 
     public User()
     {
