@@ -24,7 +24,7 @@ public partial class NavMenu
 
     public void RedirectToProfile()
     {
-        NavigationManager?.NavigateTo($"/users/{_user.Id}");
+        NavigationManager?.NavigateTo($"/users/{_user!.Id}");
     }
 
     public string UserButtonImageStyle()

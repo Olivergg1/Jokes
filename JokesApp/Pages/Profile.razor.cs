@@ -4,10 +4,12 @@ using JokesApp.Stores.Profile;
 using JokesApp.Models;
 using JokesApp.Constants;
 using JokesApp.Stores.Users;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace JokesApp.Pages;
 
-public partial class Profile
+public partial class Profile : IDisposable
 {
     [Parameter]
     public int? Id { get; set; }
@@ -49,6 +51,31 @@ public partial class Profile
     {
         base.OnInitialized();
 
+        FetchUser();
+
+        NavigationManager!.LocationChanged += HandleLocationChanged;
+
+        SubscribeToAction<ToggleUpvoteSuccededAction>(OnToggleUpvoteSucceeded);
+        SubscribeToAction<UserLogoutSucceededAction>(OnUserLogoutSucceededAction);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (User!.Id == Id)
+        {
+            NavigationManager!.LocationChanged -= HandleLocationChanged;
+        }
+    }
+
+    public void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
+    {
+        FetchUser();
+    }
+
+    public void FetchUser()
+    {
         if (Id.HasValue)
         {
             Dispatcher?.Dispatch(new FetchProfileByIdAction(Id.Value, LoggedInUser?.Id ?? 0));
@@ -57,9 +84,6 @@ public partial class Profile
         {
             Dispatcher?.Dispatch(new FetchProfileFailedAction { Reason = ErrorMessages.UserIdNotProvided });
         }
-
-        SubscribeToAction<ToggleUpvoteSuccededAction>(OnToggleUpvoteSucceeded);
-        SubscribeToAction<UserLogoutSucceededAction>(OnUserLogoutSucceededAction);
     }
 
     public void ToggleUpvote()
