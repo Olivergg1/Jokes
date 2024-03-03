@@ -35,6 +35,15 @@
     width: max-content;
 }
 
+#flag {
+    background-color: #303030;
+    border: none;
+    height: 2rem;
+    aspect-ratio: 1;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+}
+
 #submit-link {
     margin-top: auto;
     color: lightgray;
