@@ -1,9 +1,11 @@
 ﻿using JokesApp.Models;
+using JokesApp.Stores.Generic;
 
 namespace JokesApp.Stores.Users;
 
-public record UserLoginAction(Credentials credentilas);
-public record UserLoginSuccessAction(User user);
+public record UserLoginAction(Credentials Credentials);
+public record UserLoginSucceededAction(User User);
+public record UserLoginFailedAction() : ErrorAction();
 
 public record UserLogoutAction();
 public record UserLogoutSuccessAction();

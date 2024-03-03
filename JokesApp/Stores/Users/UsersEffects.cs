@@ -1,6 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Fluxor;
+using JokesApp.Constants;
 using JokesApp.Models;
+using JokesApp.Stores.Profile;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace JokesApp.Stores.Users;
@@ -19,19 +22,30 @@ public class UsersEffects
     [EffectMethod]
     public async Task AttemptUserLogin(UserLoginAction action, IDispatcher dispatcher)
     {
-        var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "api/users/auth", action.credentilas);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            // LOGIN
+            var cts = new CancellationTokenSource();
+            var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "api/users/auth", action.Credentials, cts.Token);
+
+            response.EnsureSuccessStatusCode();
+
             var user = await response.Content.ReadFromJsonAsync<User>();
             await _localStorage.SetItemAsync("UserKey", user);
 
-            dispatcher.Dispatch(new UserLoginSuccessAction(user));
+            dispatcher.Dispatch(new UserLoginSucceededAction(user));
         }
-        else
+        catch (HttpRequestException exception)
         {
-            // TODO: Failed to login
+            switch (exception.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    dispatcher.Dispatch(new UserLoginFailedAction { Reason = "Incorrect username or password☠️" });
+                    break;
+                default:
+                    // Server timeout (not reachable)
+                    dispatcher.Dispatch(new UserLoginFailedAction { Reason = "Server did not respond in time😴" });
+                    break;
+            }
         }
     }
 

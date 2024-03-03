@@ -4,12 +4,35 @@ namespace JokesApp.Stores.Users;
 
 public class UsersReducers
 {
-    [ReducerMethod]
-    public static UsersState ReduceUserLoginSuccessAction(UsersState state, UserLoginSuccessAction action)
+    [ReducerMethod(typeof(UserLoginAction))]
+    public static UsersState ReduceUserLoginAction(UsersState state)
     {
         return state with
         {
-            User = action.user,
+            IsLoading = true,
+            HasErrored = false,
+        };
+    }
+
+    [ReducerMethod]
+    public static UsersState ReduceUserLoginSuccessAction(UsersState state, UserLoginSucceededAction action)
+    {
+        return state with
+        {
+            User = action.User,
+            HasErrored = false,
+            IsLoading = false,
+        };
+    }
+
+    [ReducerMethod]
+    public static UsersState ReduceUserLoginFailedAction(UsersState state, UserLoginFailedAction action)
+    {
+        return state with
+        {
+            ErrorMessage = action.Reason,
+            HasErrored = true,
+            IsLoading = false,
         };
     }
 

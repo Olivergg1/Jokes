@@ -8,6 +8,10 @@
     background-color: #334285;
 }
 
+#error-message {
+    text-align: center;
+}
+
 #login-success {
     display: flex;
     flex-direction: column;
