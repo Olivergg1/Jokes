@@ -37,6 +37,15 @@ public class UsersReducers
     }
 
     [ReducerMethod]
+    public static UsersState ReduceSetUserAction(UsersState state, SetUserAction action)
+    {
+        return state with
+        {
+            User = action.User
+        };
+    }
+
+    [ReducerMethod]
     public static UsersState ReduceUserLogoutSuccessAction(UsersState state, UserLogoutSuccessAction action)
     {
         return state with

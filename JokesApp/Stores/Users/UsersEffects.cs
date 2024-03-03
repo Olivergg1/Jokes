@@ -49,18 +49,22 @@ public class UsersEffects
         }
     }
 
+    [EffectMethod(typeof(TryLoadUserFromLocalstorageAction))]
+    public async Task TryLoadUserFromLocalstorage(IDispatcher dispatcher)
+    {
+        var user = await _localStorage.GetItemAsync<User>("UserKey");
+
+        if (user != null)
+        {
+            dispatcher.Dispatch(new SetUserAction(user));
+        }
+    }
+
     [EffectMethod(typeof(UserLogoutAction))]
     public async Task AttemptUserLogout(IDispatcher dispatcher)
     {
-        var response = true; // TODO: Implement and replace with actual logout logic
-
-        if (response)
-        {
-            dispatcher.Dispatch(new UserLogoutSuccessAction());
-        }
-        else
-        {
-            // TODO: Failed logout action
-        }
+        await _localStorage.RemoveItemAsync("UserKey");
+            
+        dispatcher.Dispatch(new UserLogoutSuccessAction());
     }
 }
