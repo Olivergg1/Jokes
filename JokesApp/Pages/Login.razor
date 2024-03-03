@@ -15,9 +15,13 @@
 }
 else
 {
-    <h3 id="login-header">Login</h3>
-    <EditForm class="std-form" Model="CredentialsModel" OnSubmit="HandleSubmit" FormName="LoginForm">
-        <TextInput class="std-input" @bind-Value="CredentialsModel!.Username" placeholder="Username..." />
-        <button type="submit" class="std-button-outlined">login</button>
-    </EditForm>
+    <div id="login-container">
+        <h3 id="login-header">Login</h3>
+        <EditForm class="std-form" Model="CredentialsModel" OnSubmit="HandleSubmit" FormName="LoginForm">
+            <TextInput class="std-input" @bind-Value="CredentialsModel!.Username" placeholder="Username..." />
+            <TextInput class="std-input" @bind-Value="CredentialsModel!.Password"  disabled placeholder="Top-secret password" type="password" />
+            <button type="submit" class="std-button-fill">login</button>
+        </EditForm>
+    </div>
+    
 }

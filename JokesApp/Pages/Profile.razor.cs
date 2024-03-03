@@ -40,7 +40,7 @@ public partial class Profile
     public string GetPaginationText => $"Showing {GetJokesOffset() + 1} - {GetPaginationUpperLimit} of total {JokesCount}";
 
     private bool upvoteButtonDisabled = false;
-    private string upvoteButtonText => User!.HasUpvoted ? "remove upvote" : "upvote";
+    private string upvoteButtonText => User!.HasUpvoted ? "❌ remove upvote" : "⬆️ upvote";
 
     protected override void OnInitialized()
     {

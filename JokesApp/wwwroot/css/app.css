@@ -136,8 +136,8 @@ code {
 
 .std-button-fill {
     padding: 0.5rem 1rem;
+    border: none;
     border-radius: 0.5rem;
-    border: 1px solid white;
     background-color: #258cfb;
     color: lightgray;
     transition: background-color ease-in-out 0.3s;

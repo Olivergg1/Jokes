@@ -1,10 +1,11 @@
 ﻿#submit-container {
-    border: 1px solid lightgray;
+    background-color: #334285;
     padding: 2rem;
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: 100%;
 }
 
 form::deep {
