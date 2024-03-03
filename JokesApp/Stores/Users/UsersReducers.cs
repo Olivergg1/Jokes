@@ -46,7 +46,7 @@ public class UsersReducers
     }
 
     [ReducerMethod]
-    public static UsersState ReduceUserLogoutSuccessAction(UsersState state, UserLogoutSuccessAction action)
+    public static UsersState ReduceUserLogoutSuccessAction(UsersState state, UserLogoutSucceededAction action)
     {
         return state with
         {

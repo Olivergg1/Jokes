@@ -16,6 +16,9 @@ public partial class Profile
     public IDispatcher? Dispatcher { get; set; }
 
     [Inject]
+    public NavigationManager? NavigationManager { get; set; }
+
+    [Inject]
     public IState<ProfileState>? ProfileState { get; set; }
 
     [Inject]
@@ -56,6 +59,7 @@ public partial class Profile
         }
 
         SubscribeToAction<ToggleUpvoteSuccededAction>(OnToggleUpvoteSucceeded);
+        SubscribeToAction<UserLogoutSucceededAction>(OnUserLogoutSucceededAction);
     }
 
     public void ToggleUpvote()
@@ -69,6 +73,11 @@ public partial class Profile
         upvoteButtonDisabled = false;
     }
 
+    public void OnUserLogoutSucceededAction(UserLogoutSucceededAction action)
+    {
+        NavigationManager?.NavigateTo("");
+    }
+
     private void increasePagination()
     {
         _offset = Math.Clamp(_offset + 1, 0, MaxPaginations);
@@ -77,5 +86,10 @@ public partial class Profile
     private void decreasePagination()
     {
         _offset = Math.Clamp(_offset - 1, 0, MaxPaginations);
+    }
+
+    public void HandleLogout()
+    {
+        Dispatcher?.Dispatch(new UserLogoutAction());
     }
 }

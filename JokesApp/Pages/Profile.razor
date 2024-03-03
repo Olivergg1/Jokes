@@ -50,6 +50,12 @@
                     <p>It appears @User?.Name has no jokes 😑</p>
                 }
             </section>
+            @if (IsSelf)
+            {
+                <section>
+                    <button id="logout-button" class="std-button-fill" @onclick=HandleLogout>🚪 logout</button>
+                </section>
+            }
         </div>
     }
 }

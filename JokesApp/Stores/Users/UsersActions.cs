@@ -8,7 +8,7 @@ public record UserLoginSucceededAction(User User);
 public record UserLoginFailedAction() : ErrorAction();
 
 public record UserLogoutAction();
-public record UserLogoutSuccessAction();
+public record UserLogoutSucceededAction();
 
 public record TryLoadUserFromLocalstorageAction();
 public record SetUserAction(User User);

@@ -65,6 +65,6 @@ public class UsersEffects
     {
         await _localStorage.RemoveItemAsync("UserKey");
             
-        dispatcher.Dispatch(new UserLogoutSuccessAction());
+        dispatcher.Dispatch(new UserLogoutSucceededAction());
     }
 }
