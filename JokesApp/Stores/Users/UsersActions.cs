@@ -12,3 +12,6 @@ public record UserLogoutSucceededAction();
 
 public record TryLoadUserFromLocalstorageAction();
 public record SetUserAction(User User);
+
+public record UserAuthenticateAction();
+public record UserAuthenticateSucceededAction(User User);

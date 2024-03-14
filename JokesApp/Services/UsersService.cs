@@ -1,6 +1,5 @@
 ﻿using JokesApp.Models;
 using JokesApp.Constants;
-using JokesApp.Stores.Jokes;
 using System.Net;
 using System.Net.Http.Json;
 using Fluxor;
@@ -16,14 +15,14 @@ public interface IUsersService
 
 public class UsersService : BaseService, IUsersService
 {
-    public UsersService(HttpClient httpClient, IDispatcher dispatcher) : base(httpClient, dispatcher) { }
+    public UsersService(ApiService apiService, IDispatcher dispatcher) : base(apiService, dispatcher) { }
 
     public async Task<User?> GetUserById(int id, int senderId = 0)
     {
         try
         {
             var cts = new CancellationTokenSource();
-            var response = await HttpClient.GetAsync($"{HttpClient.BaseAddress}api/users/{id}?sender={senderId}", cts.Token);
+            var response = await ApiService.GetAsync($"users/{id}", cts.Token);
 
             response.EnsureSuccessStatusCode();
 
@@ -50,7 +49,7 @@ public class UsersService : BaseService, IUsersService
         try
         {
             var cts = new CancellationTokenSource();
-            var response = await HttpClient.PostAsJsonAsync($"{HttpClient.BaseAddress}api/users/upvote", upvote, cts.Token);
+            var response = await ApiService.PostAsJsonAsync($"users/upvote", upvote, cts.Token);
 
             response.EnsureSuccessStatusCode();
 

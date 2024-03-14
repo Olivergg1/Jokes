@@ -3,14 +3,15 @@ using JokesApp.Constants;
 using JokesApp.Models;
 using System.Net.Http.Json;
 using System.Net;
+using JokesApp.Services;
 
 namespace JokesApp.Stores.Jokes;
 
 public class JokesEffects
 {
-    private readonly HttpClient _httpClient;
+    private readonly ApiService _httpClient;
 
-    public JokesEffects(HttpClient httpClient)
+    public JokesEffects(ApiService httpClient)
     {
         _httpClient = httpClient;
     }
@@ -23,7 +24,7 @@ public class JokesEffects
         try
         {
             // Fetch random joke
-            var jokeResponse = await _httpClient.GetAsync(_httpClient.BaseAddress + "api/Jokes/random", cts.Token);
+            var jokeResponse = await _httpClient.GetAsync("Jokes/random", cts.Token);
             jokeResponse.EnsureSuccessStatusCode();
 
             var joke = await jokeResponse.Content.ReadFromJsonAsync<Joke>();
@@ -53,7 +54,7 @@ public class JokesEffects
         try
         {
             // Fetch joke
-            var jokeResponse = await _httpClient.GetAsync(_httpClient.BaseAddress + "api/Jokes/" + action.Id, cts.Token);
+            var jokeResponse = await _httpClient.GetAsync($"Jokes/{action.Id}", cts.Token);
             jokeResponse.EnsureSuccessStatusCode();
 
             var joke = await jokeResponse.Content.ReadFromJsonAsync<Joke>();
@@ -78,7 +79,7 @@ public class JokesEffects
     [EffectMethod]
     public async Task AddJoke(AddJokeAction action, IDispatcher dispatcher)
     {
-        var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "api/Jokes/", action.Joke);
+        var response = await _httpClient.PostAsJsonAsync("Jokes", action.Joke);
 
         if (response.IsSuccessStatusCode)
         {

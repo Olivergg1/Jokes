@@ -1,69 +1,45 @@
-﻿using Blazored.LocalStorage;
-using Fluxor;
-using JokesApp.Constants;
-using JokesApp.Models;
-using JokesApp.Stores.Profile;
-using System.Net;
-using System.Net.Http.Json;
+﻿using Fluxor;
+using JokesApp.Providers;
+using JokesApp.Services;
 
 namespace JokesApp.Stores.Users;
 
 public class UsersEffects
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILocalStorageService _localStorage;
+    private readonly ApiService _httpClient;
+    private readonly JwtAuthenticationStateProvider _authState;
 
-    public UsersEffects(HttpClient httpClient, ILocalStorageService localStorageService)
+    public UsersEffects(ApiService httpClient, JwtAuthenticationStateProvider authState)
     {
         _httpClient = httpClient;
-        _localStorage = localStorageService;
+        _authState = authState;
     }
 
     [EffectMethod]
     public async Task AttemptUserLogin(UserLoginAction action, IDispatcher dispatcher)
     {
-        try
+        var success = await _authState.LoginAsync(action.Credentials.Username, action.Credentials.Password);
+
+        if (success)
         {
-            var cts = new CancellationTokenSource();
-            var response = await _httpClient.PostAsJsonAsync(_httpClient.BaseAddress + "api/users/auth", action.Credentials, cts.Token);
-
-            response.EnsureSuccessStatusCode();
-
-            var user = await response.Content.ReadFromJsonAsync<User>();
-            await _localStorage.SetItemAsync("UserKey", user);
-
-            dispatcher.Dispatch(new UserLoginSucceededAction(user));
+            dispatcher.Dispatch(new UserAuthenticateAction());
         }
-        catch (HttpRequestException exception)
+        else
         {
-            switch (exception.StatusCode)
-            {
-                case HttpStatusCode.BadRequest:
-                    dispatcher.Dispatch(new UserLoginFailedAction { Reason = "Incorrect username or password☠️" });
-                    break;
-                default:
-                    // Server timeout (not reachable)
-                    dispatcher.Dispatch(new UserLoginFailedAction { Reason = "Server did not respond in time😴" });
-                    break;
-            }
+            dispatcher.Dispatch(new UserLoginFailedAction { Reason = "Incorrect username or password☠️" });
         }
     }
 
-    [EffectMethod(typeof(TryLoadUserFromLocalstorageAction))]
-    public async Task TryLoadUserFromLocalstorage(IDispatcher dispatcher)
+    [EffectMethod(typeof(UserAuthenticateAction))]
+    public async Task UserAuthenticate(IDispatcher dispatcher)
     {
-        var user = await _localStorage.GetItemAsync<User>("UserKey");
-
-        if (user != null)
-        {
-            dispatcher.Dispatch(new SetUserAction(user));
-        }
+        await _authState.CheckAuthenticationAsync();
     }
 
     [EffectMethod(typeof(UserLogoutAction))]
     public async Task AttemptUserLogout(IDispatcher dispatcher)
     {
-        await _localStorage.RemoveItemAsync("UserKey");
+        await _authState.LogoutAsync();
             
         dispatcher.Dispatch(new UserLogoutSucceededAction());
     }

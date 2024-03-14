@@ -1,9 +1,9 @@
-﻿using JokesAPI.Contexts;
-using JokesAPI.Models;
+﻿using JokesAPI.Models;
 using JokesAPI.Services;
 using JokesApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace JokesAPI.Controllers;
 
@@ -12,16 +12,19 @@ namespace JokesAPI.Controllers;
 public class UsersController : ControllerBase
 {
     private IUsersService _usersService;
+    private UserManager<User> _userManager;
 
-    public UsersController(IUsersService usersService)
+    public UsersController(IUsersService usersService, UserManager<User> userManager)
     {
         _usersService = usersService;
+        _userManager = userManager;
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserDetailDto?>> GetUserById(int id, [FromQuery(Name = "sender")] int senderId)
+    public async Task<ActionResult<UserDetailDto?>> GetUserById(int id)
     {
-        var user = await _usersService.GetUserByIdAsync(id, senderId);
+        var sender = await _usersService.GetUserByUsername(User.Identity?.Name ?? string.Empty);
+        var user = await _usersService.GetUserByIdAsync(id, sender?.Id);
 
         if (user == null)
         {
@@ -39,10 +42,12 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(CreateUser), new { id = user.Id }, user);
     }
 
+    [Authorize]
     [HttpPost("upvote")]
     public async Task<ActionResult> UpvoteUser([FromBody] UpvoteDto upvoteDto)
     {
-        var success = await _usersService.ToggleUpvoteAsync(upvoteDto);
+        var sender = await _usersService.GetUserByUsername(User.Identity?.Name ?? string.Empty);
+        var success = await _usersService.ToggleUpvoteAsync(upvoteDto, sender.Id);
 
         if (!success)
         {
@@ -53,15 +58,15 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("auth")]
-    public async Task<ActionResult<UserDto?>> AuthenticateUser(Credentials credentials)
+    public async Task<ActionResult> AuthenticateUser()
     {
-        var user = await _usersService.AuthenticateUserAsync(credentials);
+        var res = User?.Identity?.IsAuthenticated;
 
-        if (user == null)
+        if (res.HasValue && !res.Value)
         {
             return BadRequest();
         }
         
-        return Ok(user);
+        return Ok();
     }
 }

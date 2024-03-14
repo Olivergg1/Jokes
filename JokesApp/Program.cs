@@ -4,18 +4,25 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Fluxor;
 using Blazored.LocalStorage;
 using JokesApp.Services;
-
-const string API_BASE_URL = "https://localhost:7169/";
+using JokesApp.Handlers;
+using Microsoft.AspNetCore.Components.Authorization;
+using JokesApp.Providers;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(API_BASE_URL) });
+builder.Services.AddAuthorizationCore();
+builder.Services.AddBlazoredLocalStorage();
+
+builder.Services.AddScoped<JwtTokenService>();
+builder.Services.AddScoped<JwtTokenHandler>();
+builder.Services.AddScoped<ApiService>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+builder.Services.AddScoped(sp => (JwtAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>());
 
 builder.Services.AddFluxor(o => o.ScanAssemblies(typeof(Program).Assembly));
-
-builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
 

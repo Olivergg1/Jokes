@@ -2,27 +2,27 @@
 
 @inherits FluxorComponent
 
-@if (User != null)
-{
-    <div id="login-success">
-        <h3 id="login-welcome-message">👋 Welcome, @User.Name</h3>
-        <div id="login-success-bottom">
-            <button class="std-button-outlined" @onclick=RedirectToProfile>🧔 your profile</button>
-            <button class="std-button-outlined" @onclick=RedirectToHome>🎲 load a random joke</button>
-            <p>or</p>
-            <button class="std-button-outlined" @onclick=HandleLogout>🚪 logout</button>
+<AuthorizeView>
+    <Authorized>
+        <div id="login-success">
+            <h3 id="login-welcome-message">👋 Welcome, @User?.Name</h3>
+            <div id="login-success-bottom">
+                <button class="std-button-outlined" @onclick=RedirectToProfile>🧔 your profile</button>
+                <button class="std-button-outlined" @onclick=RedirectToHome>🎲 load a random joke</button>
+                <p>or</p>
+                <button class="std-button-outlined" @onclick=HandleLogout>🚪 logout</button>
+            </div>
         </div>
-    </div>
-}
-else
-{
-    <div id="login-container">
-        <h3 id="login-header">Login</h3>
-        <EditForm class="std-form" Model="CredentialsModel" OnSubmit="HandleSubmit" FormName="LoginForm">
-            <TextInput class="std-input" @bind-Value="CredentialsModel!.Username" placeholder="Username..." />
-            <TextInput class="std-input" @bind-Value="CredentialsModel!.Password"  disabled placeholder="Top-secret password" type="password" />
-            <button id="login-button" type="submit" class="std-button-fill" disabled=@LoginButtonDisabled>login</button>
-        </EditForm>
-        <p id="error-message">@ErrorMessage</p>
-    </div>
-}
+    </Authorized>
+    <NotAuthorized>
+        <div id="login-container">
+            <h3 id="login-header">Login</h3>
+            <EditForm class="std-form" Model="CredentialsModel" OnSubmit="HandleSubmit" FormName="LoginForm" Context="EditContext">
+                <TextInput class="std-input" @bind-Value="CredentialsModel!.Username" placeholder="Username..." />
+                <TextInput class="std-input" @bind-Value="CredentialsModel!.Password" placeholder="Top-secret password" type="password" />
+                <button id="login-button" type="submit" class="std-button-fill" disabled=@LoginButtonDisabled>login</button>
+            </EditForm>
+            <p id="error-message">@ErrorMessage</p>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

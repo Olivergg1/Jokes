@@ -60,16 +60,6 @@ public partial class Profile : IDisposable
         SubscribeToAction<UserLogoutSucceededAction>(OnUserLogoutSucceededAction);
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-
-        if (User!.Id == Id)
-        {
-            NavigationManager!.LocationChanged -= HandleLocationChanged;
-        }
-    }
-
     public void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
     {
         FetchUser();
@@ -116,5 +106,15 @@ public partial class Profile : IDisposable
     public void OpenLogoutModal()
     {
         Dispatcher?.Dispatch(new ShowModalAction(typeof(LogoutModal)));
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (User?.Id == Id)
+        {
+            NavigationManager!.LocationChanged -= HandleLocationChanged;
+        }
     }
 }

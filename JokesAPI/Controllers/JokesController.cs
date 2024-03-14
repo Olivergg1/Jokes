@@ -1,8 +1,7 @@
-﻿using JokesAPI.Contexts;
-using JokesAPI.Models;
+﻿using JokesAPI.Models;
 using JokesAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace JokesAPI.Controllers;
 
@@ -50,13 +49,13 @@ public class JokesController : ControllerBase
 
         if (joke == null)
         {
-            return BadRequest(); // NOTE TO FUTURE ME: Should this be NotFound instead??
+            return NotFound(); // NOTE TO FUTURE ME: Should this be NotFound instead??
         }
 
         return Ok(joke);
     }
 
-    [HttpPost]
+    [Authorize, HttpPost]
     public async Task<ActionResult<JokeDto>> AddNewJoke(Joke joke)
     {
         await _jokesService.AddJokeAsync(joke);

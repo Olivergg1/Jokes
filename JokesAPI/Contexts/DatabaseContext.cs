@@ -1,25 +1,27 @@
 ﻿using JokesAPI.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace JokesAPI.Contexts;
 
-public class DatabaseContext : DbContext
+public class DatabaseContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     private  IConfiguration _configuration { get; }
 
-    public DatabaseContext(IConfiguration configuration)
+    public DatabaseContext(IConfiguration configuration) : base()
     {
         _configuration = configuration;
     }
 
     public DbSet<Joke> Jokes { get; set; }
-    public DbSet<User> Users { get; set; }
     public DbSet<UserUpvote> UsersUpvote { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<TicketType> TicketTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        base.OnConfiguring(optionsBuilder);
         var ConnectionString = _configuration["ConnectionStrings:database"];
         optionsBuilder.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
     }
@@ -27,6 +29,16 @@ public class DatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Id)
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<Joke>()
+            .HasOne(j => j.Author)
+            .WithMany(u => u.Jokes)
+            .HasForeignKey(u => u.AuthorId)
+            .IsRequired();
 
         modelBuilder.Entity<UserUpvote>()
             .HasKey(u => new { u.UpvoterId, u.UpvotedUserId });

@@ -11,7 +11,6 @@ public class Joke
     public string Content { get; set; }
 
     [Required]
-    [ForeignKey(nameof(User))]
     public int AuthorId { get; set; }
 
     public User? Author { get; init; }

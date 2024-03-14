@@ -7,10 +7,10 @@ namespace JokesAPI.Services;
 
 public interface IUsersService
 {
-    Task<UserDetailDto?> GetUserByIdAsync(int id, int sender);
+    Task<UserDetailDto?> GetUserByIdAsync(int id, int? senderId);
+    Task<UserDetailDto?> GetUserByUsername(string username);
     Task<UserDto?> CreateUserAsync(User user);
-    Task<User?> AuthenticateUserAsync(Credentials credentials);
-    Task<bool> ToggleUpvoteAsync(UpvoteDto upvoteDto);
+    Task<bool> ToggleUpvoteAsync(UpvoteDto upvoteDto, int? senderId);
 }
 
 public class UsersService : IUsersService
@@ -23,7 +23,7 @@ public class UsersService : IUsersService
     }
 
     // TODO: Implement authorized requests and remove sender
-    public async Task<UserDetailDto?> GetUserByIdAsync(int id, int sender)
+    public async Task<UserDetailDto?> GetUserByIdAsync(int id, int? senderId = 0)
     {
         return await _databaseContext.Users
             .Include(user => user.Jokes)
@@ -31,20 +31,48 @@ public class UsersService : IUsersService
             .Select(user => new UserDetailDto 
             {
                 Id = user.Id,
-                Username = user.Username,
+                Username = user.UserName,
                 Name = user.Name,
                 Image = user.Image,
                 Jokes = user.Jokes.ToList(),
                 Upvotes = user.Upvoters.ToList().Count,
-                HasUpvoted = user.Upvoters.Any(upvote => upvote.UpvoterId == sender && upvote.UpvotedUserId == id),
+                HasUpvoted = user.Upvoters.Any(upvote => upvote.UpvoterId == senderId && upvote.UpvotedUserId == id),
             })
             .SingleOrDefaultAsync(user => user.Id == id);
     }
 
-    public async Task<bool> ToggleUpvoteAsync(UpvoteDto upvoteDto)
+    public async Task<UserDetailDto?> GetUserByUsername(string username)
     {
+        return await _databaseContext.Users
+            .Include(user => user.Jokes)
+            .Include(user => user.Upvoters)
+            .Select(user => new UserDetailDto
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Name = user.Name,
+                Image = user.Image,
+                Jokes = user.Jokes.ToList(),
+            })
+            .SingleOrDefaultAsync(user => user.Username == username);
+    }
+
+    public async Task<bool> ToggleUpvoteAsync(UpvoteDto upvoteDto, int? senderId = 0)
+    {
+        // Make sure the user upvoting another user is the one sending the request
+        if (upvoteDto.UpvoterId != senderId)
+        {
+            return false;
+        }
+
         // Cannot upvote yourself
         if (upvoteDto.UpvoterId == upvoteDto.UpvotedUserId)
+        {
+            return false;
+        }
+
+        // Make sure the sender is not the person to be upvoted
+        if (upvoteDto.UpvotedUserId == senderId)
         {
             return false;
         }
@@ -87,18 +115,11 @@ public class UsersService : IUsersService
         var createdUser = new UserDto
         {
             Id = entity.Id,
-            Username = entity.Username,
+            Username = entity.UserName,
             Name = entity.Name,
             Image = entity.Image
         };
 
         return createdUser;
-    }
-
-    public async Task<User?> AuthenticateUserAsync(Credentials credentials)
-    {
-        var user = await _databaseContext.Users.Where(u => u.Username == credentials.Username).FirstOrDefaultAsync();
-
-        return user;
     }
 }

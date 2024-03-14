@@ -1,7 +1,10 @@
 ﻿using Fluxor;
 using JokesApp.Models;
+using JokesApp.Providers;
 using JokesApp.Stores.Users;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace JokesApp.Pages;
 
@@ -16,6 +19,9 @@ public partial class Login
     [Inject]
     public NavigationManager? NavigationManager { get; set; }
 
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
     [SupplyParameterFromForm]
     public Credentials? CredentialsModel { get; set; }
 
@@ -25,10 +31,16 @@ public partial class Login
 
     public bool LoginButtonDisabled => UsersState!.Value.IsLoading;
 
-    protected override void OnInitialized()
+    public EditContext EditContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
+
         CredentialsModel ??= new Credentials();
+        EditContext = new EditContext(CredentialsModel);
+
+        await AuthState;
     }
 
     public void HandleSubmit()

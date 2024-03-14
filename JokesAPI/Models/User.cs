@@ -1,19 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JokesAPI.Models;
 
-[Index(nameof(Username), IsUnique = true)]
-public class User
+[Index(nameof(UserName), IsUnique = true)]
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; }
-
     [Required]
-    public string Name { get; set; }
-
-    [Required]
-    public string Username { get; set; }
+    public string Name { get; set; } = "Unknown Jokster";
 
     [Required]
     public string Image { get; set; }
@@ -23,6 +18,8 @@ public class User
     public List<UserUpvote> Upvoters { get; set; } = [];
 
     public List<UserUpvote> UpvotedUsers { get; set; } = [];
+
+    public bool HasUpdatedName => Name != "Unknown Jokster";
 
     public User()
     {

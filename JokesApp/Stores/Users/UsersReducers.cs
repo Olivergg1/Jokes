@@ -26,6 +26,17 @@ public class UsersReducers
     }
 
     [ReducerMethod]
+    public static UsersState ReduceUserAuthenticateAction(UsersState state, UserAuthenticateSucceededAction action)
+    {
+        return state with
+        {
+            User = action.User,
+            HasErrored = false,
+            IsLoading = false
+        };
+    }
+
+    [ReducerMethod]
     public static UsersState ReduceUserLoginFailedAction(UsersState state, UserLoginFailedAction action)
     {
         return state with
